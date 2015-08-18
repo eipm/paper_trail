@@ -187,6 +187,7 @@ module PaperTrail
           :mark_for_destruction => false,
           :has_one    => false,
           :has_many   => false,
+          :through    => false,
           :unversioned_attributes => :nil
         )
 
@@ -366,7 +367,9 @@ module PaperTrail
         model.class.reflect_on_all_associations(:has_many).
         partition { |assoc| assoc.options[:through] }
       reify_has_many_directly(assoc_has_many_directly, model, options)
-      reify_has_many_through(assoc_has_many_through, model, options)
+      unless options[:through] == false
+        reify_has_many_through(assoc_has_many_through, model, options)
+      end
     end
 
     # Restore the `model`'s has_many associations not associated through
